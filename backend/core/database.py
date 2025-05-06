@@ -4,15 +4,15 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, \
 from sqlalchemy import Column, Integer
 from sqlalchemy.orm import declarative_base, declared_attr
 
-from config import DATABASE_URL
+from backend.core.config import settings
 
-if DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace(
+if settings.DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = settings.DATABASE_URL.replace(
         "postgresql://", "postgresql+asyncpg://", 1)
 
 # Создание асинхронного движка SQLAlchemy
 engine = create_async_engine(
-    DATABASE_URL,
+    settings.DATABASE_URL,
     echo=True,  # Вывод SQL-запросов в консоль (удобно для отладки)
 )
 
