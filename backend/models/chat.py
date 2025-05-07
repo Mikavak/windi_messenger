@@ -18,14 +18,17 @@ class Chat(Base):
     type_chat = Column(Enum(ChatType), nullable=False)
     users = relationship("User",
                          secondary="user_chat",
-                         back_populates="chat")
+                         back_populates="chats")
     created_date = Column(DateTime, default=datetime.now)
     updated_date = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    messages = relationship("Message", back_populates="chat")
 
 
 class Message(Base):
     chat_id = Column(Integer, ForeignKey("chat.id"), nullable=False)
+    chat = relationship("Chat", back_populates="messages")
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user = relationship("User", back_populates="messages")
     message_text = Column(Text, nullable=False)
     created_date = Column(DateTime, default=datetime.now)
     status_read = Column(Boolean, nullable=False, default=False)
