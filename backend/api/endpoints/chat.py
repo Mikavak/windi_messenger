@@ -23,6 +23,7 @@ async def create_chat(
         creator_id=user.id
     )
 
+
 @router.get(
     '/',
     response_model=list[ChatRead]
@@ -32,3 +33,24 @@ async def get_all_chats(
 ):
     chats = await session.get_all_chats()
     return chats
+
+@router.get(
+    '/{chat_id}',
+    response_model=ChatRead
+)
+async def get_chat(
+        chat_id: int,
+        session: ChatService = Depends(get_chat_service)
+):
+    return await session.get_one(chat_id)
+
+
+@router.delete(
+    '/{chat_id}',
+    response_model=ChatRead
+)
+async def delete_chat(
+        chat_id: int,
+        session: ChatService = Depends(get_chat_service)
+):
+    return await session.remove(chat_id)

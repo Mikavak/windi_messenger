@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from backend.models.chat import ChatType
+from backend.schemas.user import UserRead
 
 
 class ChatBase(BaseModel):
@@ -26,8 +27,10 @@ class ChatResponseCreate(ChatCreate):
 
 
 class ChatRead(ChatCreate):
+    id: int
     created_date: datetime
     updated_date: datetime
+    creator: UserRead
 
 
 class ChatUpdate(ChatBase):

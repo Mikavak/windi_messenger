@@ -16,6 +16,13 @@ class ChatType(str, enum.Enum):
 class Chat(Base):
     name = Column(String(20), nullable=False)
     type_chat = Column(Enum(ChatType), nullable=False)
+    creator_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    creator = relationship(
+        "User",
+        # Указываю строковое имя в кавычках
+        foreign_keys="[Chat.creator_id]",
+        lazy="joined"
+    )
     users = relationship("User",
                          secondary="user_chat",
                          back_populates="chats")
