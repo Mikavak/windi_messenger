@@ -24,6 +24,8 @@ class ChatResponseCreate(ChatCreate):
     """Схема ответа после создания чата"""
     id: int
     created_at: datetime = Field(default_factory=datetime.now)
+    users: UserRead
+
 
 
 class ChatRead(ChatCreate):
@@ -31,6 +33,7 @@ class ChatRead(ChatCreate):
     created_date: datetime
     updated_date: datetime
     creator: UserRead
+    # users: list[UserRead]
 
 
 class ChatUpdate(ChatBase):

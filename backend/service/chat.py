@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.crud.chat import chat_crud
 from backend.models import User
-from backend.schemas.chat import ChatCreate, ChatRead
+from backend.schemas.chat import ChatCreate, ChatRead, ChatUpdate
 from backend.service.validators import check_duplicate_chat
 
 
@@ -43,3 +43,20 @@ class ChatService:
 
     async def remove(self, chat_id: int):
         return await chat_crud.remove(self.session, chat_id)
+
+    async def update_chat(self, chat_id: int, chat_update: ChatUpdate):
+        db_obj = await chat_crud.get_one(self.session, chat_id)
+        return await chat_crud.update(db_obj, chat_update, self.session)
+
+    async def add_user_in_chat(
+            self,
+            chat_id: int,
+            user_id: int,
+            current_user: int):
+        chat = await chat_crud.get_one(self.session, chat_id)
+        # Проверяем, существует ли пользователь
+        user_query = select(User).where(User.id == user_id)
+        user_result = await self.session.execute(user_query)
+        user = user_result.scalar_one_or_none()
+        chat.users.append(user)
+        await self.session.commit()

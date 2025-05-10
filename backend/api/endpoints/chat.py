@@ -2,10 +2,13 @@ from fastapi import APIRouter, Depends
 from backend.core.user import current_user
 from backend.dependencies.service import get_chat_service
 from backend.models import User
-from backend.schemas.chat import ChatResponseCreate, ChatCreate, ChatRead
+from backend.schemas.chat import ChatResponseCreate, ChatCreate, ChatRead, \
+    ChatUpdate
+from backend.schemas.user import UserAddInChat
 from backend.service.chat import ChatService
 
 router = APIRouter()
+
 
 @router.post(
     '/',
@@ -26,13 +29,14 @@ async def create_chat(
 
 @router.get(
     '/',
-    response_model=list[ChatRead]
+    # response_model=list[ChatRead]
 )
 async def get_all_chats(
     session: ChatService = Depends(get_chat_service)
 ):
     chats = await session.get_all_chats()
     return chats
+
 
 @router.get(
     '/{chat_id}',
@@ -54,3 +58,30 @@ async def delete_chat(
         session: ChatService = Depends(get_chat_service)
 ):
     return await session.remove(chat_id)
+
+
+@router.patch(
+    '/{chat_id}',
+    response_model=ChatRead,
+)
+async def update_chat(
+        chat_id: int,
+        chat: ChatUpdate,
+        session: ChatService = Depends(get_chat_service)
+):
+    return await session.update_chat(chat_id, chat)
+
+@router.patch(
+    '/{chat_id}/users',
+    response_model=ChatRead
+)
+async def add_user_in_chat(
+        chat_id: int,
+        user: UserAddInChat,
+        current_user: User = Depends(current_user),
+        session: ChatService = Depends(get_chat_service)
+):
+    return await session.add_user_in_chat(
+        chat_id,
+        user,
+        current_user.id)
