@@ -33,7 +33,8 @@ class ChatRead(ChatCreate):
     created_date: datetime
     updated_date: datetime
     creator: UserRead
-    # users: list[UserRead]
+    # для отображения списка пользователей
+    users: list[UserRead] = []
 
 
 class ChatUpdate(ChatBase):

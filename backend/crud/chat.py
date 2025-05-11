@@ -1,7 +1,7 @@
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
 from backend.models import Chat, User
 from backend.schemas.chat import ChatUpdate
@@ -47,10 +47,12 @@ class CRUDChat:
     ):
         query = (
             select(self.model)
+            # загрузка пользователей с помощью selectinload
+            .options(selectinload(self.model.users))
             .where(self.model.id == chat_id)
         )
         obj = await session.execute(query)
-        return obj.scalar()
+        return obj.scalar_one_or_none()
 
     async def remove(
             self,

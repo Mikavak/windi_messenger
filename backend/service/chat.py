@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.crud.chat import chat_crud
 from backend.models import User
 from backend.schemas.chat import ChatCreate, ChatRead, ChatUpdate
+from backend.schemas.user import UserAddInChat
 from backend.service.validators import check_duplicate_chat
 
 
@@ -32,14 +33,18 @@ class ChatService:
                 type_chat=chat.type_chat,
                 created_date=chat.created_date,
                 updated_date=chat.updated_date,
-                creator=chat.creator,
+                creator=chat.creator
             )
             results.append(chat_detail)
 
         return results
 
     async def get_one(self, chat_id: int):
-        return await chat_crud.get_one(self.session, chat_id)
+        chat = await chat_crud.get_one(self.session, chat_id)
+        if not chat:
+            return None
+        # возвращаю pydantic модель
+        return ChatRead.model_validate(chat)
 
     async def remove(self, chat_id: int):
         return await chat_crud.remove(self.session, chat_id)
@@ -51,12 +56,13 @@ class ChatService:
     async def add_user_in_chat(
             self,
             chat_id: int,
-            user_id: int,
+            user_data: UserAddInChat,
             current_user: int):
         chat = await chat_crud.get_one(self.session, chat_id)
         # Проверяем, существует ли пользователь
-        user_query = select(User).where(User.id == user_id)
+        user_query = select(User).where(User.id == user_data.user_id)
         user_result = await self.session.execute(user_query)
         user = user_result.scalar_one_or_none()
         chat.users.append(user)
         await self.session.commit()
+        return chat

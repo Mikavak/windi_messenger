@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from backend.core.user import current_user
 from backend.dependencies.service import get_chat_service
 from backend.models import User
@@ -46,7 +46,12 @@ async def get_chat(
         chat_id: int,
         session: ChatService = Depends(get_chat_service)
 ):
-    return await session.get_one(chat_id)
+    chat = await session.get_one(chat_id)
+
+    if not chat:
+        raise HTTPException(status_code=404, detail="Chat not found")
+
+    return chat
 
 
 @router.delete(
@@ -77,11 +82,11 @@ async def update_chat(
 )
 async def add_user_in_chat(
         chat_id: int,
-        user: UserAddInChat,
+        user_data: UserAddInChat,
         current_user: User = Depends(current_user),
         session: ChatService = Depends(get_chat_service)
 ):
     return await session.add_user_in_chat(
         chat_id,
-        user,
+        user_data,
         current_user.id)
