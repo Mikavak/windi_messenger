@@ -1,17 +1,20 @@
-version: '3'
+version: '3.8'
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: windi-messenger-backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - .:/app
     environment:
       - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/windi_messenger
     depends_on:
       - db
     restart: always
+
   db:
     image: postgres:14
     container_name: windi-messenger-db
@@ -24,5 +27,6 @@ services:
     ports:
       - "5432:5432"
     restart: always
+
 volumes:
   postgres_data:

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from backend.api.routers import main_router
+from .api.routers import main_router
 
 app = FastAPI(title='WinDI Messenger')
 
