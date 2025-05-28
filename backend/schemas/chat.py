@@ -1,17 +1,14 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from backend.models.chat import ChatType
 from backend.schemas.user import UserRead
 
 
 class ChatBase(BaseModel):
-
-    class Config:
-        from_attributes = True
-        extra = 'ignore'
+    model_config = ConfigDict(from_attributes=True, extra='ignore')
 
 
 class ChatCreate(ChatBase):
@@ -40,10 +37,3 @@ class ChatRead(ChatCreate):
 class ChatUpdate(ChatBase):
     name: Optional[str] = None
     type_chat: Optional[ChatType]
-
-
-class MessageBase(BaseModel):
-
-    class Config:
-        orm_mode = True
-        extra = 'ignore'

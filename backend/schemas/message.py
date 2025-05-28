@@ -1,13 +1,11 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class MessageBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True, extra='ignore')
 
-    class Config:
-        from_attributes = True
-        extra = 'ignore'
 
 
 class MessageCreate(MessageBase):

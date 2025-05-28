@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 from typing import Optional
 
@@ -15,10 +15,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "WinDI Messenger"
     API_V1_PREFIX: str = "/api"
     DEBUG: bool = True
-
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 
 settings = Settings()

@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
+from starlette import status
+
 from backend.core.user import current_user
 from backend.dependencies.service import get_chat_service
 from backend.models import User
@@ -12,7 +14,8 @@ router = APIRouter()
 
 @router.post(
     '/',
-    response_model=ChatResponseCreate
+    response_model=ChatResponseCreate,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_chat(
         chat: ChatCreate,
