@@ -51,10 +51,10 @@ class MockChatService:
 
         chat_mock = SimpleNamespace(
             id=chat_id,
-            name=f"Test Chat {chat_id}",  # Генерируем имя
-            type_chat="personal",  # Захардкодили
-            creator=user_mock,  # Создатель
-            users=[user_mock],  # ChatResponseCreate ожидает users: UserRead
+            name=f"Test Chat {chat_id}",
+            type_chat="personal",
+            creator=user_mock,
+            users=[user_mock],
             created_date=datetime.now(),
             updated_date=datetime.now(),
         )
