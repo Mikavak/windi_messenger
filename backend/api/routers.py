@@ -6,5 +6,5 @@ main_router = APIRouter()
 
 main_router.include_router(api_router)
 main_router.include_router(
-    chat_router, prefix="/chat", tags=["chat"]
+    chat_router, prefix="/chat", tags=["Chats"]
 )
