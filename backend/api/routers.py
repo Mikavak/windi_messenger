@@ -8,3 +8,5 @@ main_router.include_router(api_router)
 main_router.include_router(
     chat_router, prefix="/chat", tags=["Chats"]
 )
+
+# Внёс изменения
